@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float runSpeed = 8f;
     [SerializeField] private float jumpingPower = 16f;
     [SerializeField] private float maxJumpAnimationTime = 0.5f;
+    [SerializeField] private Transform visualModel;
 
     private float jumpAnimationTimer;
     private InputAction moveAction;
@@ -41,8 +42,19 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontal = moveAction.ReadValue<Vector2>().x;
         isRunning = runAction.IsPressed();
+
         Move();
         Jump();
+
+        // Character flipping
+        if (horizontal > 0)
+        {
+            visualModel.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+        else if (horizontal < 0)
+        {
+            visualModel.localRotation = Quaternion.Euler(0, 180, 0);
+        }
     }
 
     private void Move()
@@ -79,12 +91,13 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("jump", playJump);
             anim.SetBool("fall", !playJump);
         }
-         /*
+
+        /*
         if (!holdingJump && rb.linearVelocity.y > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
         }
-         */
+        */
     }
 
     private bool IsGrounded()
